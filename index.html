@@ -170,7 +170,6 @@
 <div class="wrap">
   <img class="brand-logo" src="assets/logo.png" alt="КИЇВ.ВЛАДА">
   <header>
-    <div class="eyebrow" id="src">OPORA</div>
     <h1 id="title">Вибори в Україні</h1>
     <p class="subtitle" id="subtitle"></p>
     <div class="intro" id="intro"></div>
@@ -304,7 +303,6 @@ fetch("data.json").then(r=>r.json()).then(data=>{
   if(data.meta){
     document.getElementById("title").textContent=data.meta.title||"Вибори в Україні";
     document.getElementById("subtitle").textContent=data.meta.subtitle||"";
-    document.getElementById("src").textContent=data.meta.source||"OPORA";
     document.getElementById("footer").innerHTML=(data.meta.source||"")+"<br>Костянтин Донченко";
     if(data.meta.intro){const paras=Array.isArray(data.meta.intro)?data.meta.intro:String(data.meta.intro).split(/\n\n+/);document.getElementById("intro").innerHTML=paras.map(p=>`<p>${p}</p>`).join("");}
   }
