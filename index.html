@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вибори в Україні — хронологія</title>
+<style>
+  :root{
+    --brand:#0062FF;
+    --brand-dark:#0049bf;
+    --ink:#14181f;
+    --paper:#ffffff;
+    --surface:#f4f6fa;
+    --line:#dfe4ec;
+    --muted:#5c6675;
+    --c-presidential:#0062FF;
+    --c-parliamentary:#0aa2c0;
+    --c-local:#1f9e6b;
+    --c-referendum:#6a3fd1;
+    --c-postponed:#98a1af;
+    --card:#ffffff;
+    --shadow:0 1px 2px rgba(20,30,50,.06),0 8px 24px rgba(20,30,50,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+    background:var(--paper);position:relative;
+  }
+
+  /* fixed background layer: era portraits fade in/out */
+  #era-bg{position:fixed;inset:0;z-index:-2;background:var(--paper);transition:background-color .8s ease}
+  .era-portrait{
+    position:fixed;top:0;right:0;height:100vh;width:46vw;z-index:-1;
+    background-size:cover;background-position:72% 28%;
+    opacity:0;transition:opacity .8s ease;
+    filter:grayscale(.3) brightness(1.05) contrast(.95);
+  }
+  .era-portrait::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(to right,#ffffff 0%,rgba(255,255,255,.75) 35%,rgba(255,255,255,.30) 100%);
+  }
+  .era-portrait.visible{opacity:.42}
+
+  /* fixed era caption */
+  #era-caption{
+    position:fixed;right:20px;top:76px;z-index:5;text-align:right;
+    opacity:0;transition:opacity .5s ease;pointer-events:none;
+  }
+  #era-caption.visible{opacity:1}
+  #era-caption .name{font-weight:800;font-size:15px;color:var(--ink)}
+  #era-caption .yrs{font-size:12px;color:var(--muted);letter-spacing:.03em}
+  #era-caption .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);font-weight:700;margin-bottom:3px}
+
+  .wrap{max-width:1040px;margin:0 auto;padding:32px 20px 100px;position:relative}
+
+  .brand-logo{display:block;height:34px;width:auto;margin-bottom:18px}
+  header{margin-bottom:28px;border-top:5px solid var(--brand);padding-top:22px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);font-weight:700;margin-bottom:10px}
+  h1{font-size:clamp(28px,5vw,46px);line-height:1.08;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .subtitle{font-size:clamp(15px,2.5vw,18px);color:var(--muted);max-width:none}
+
+  .intro{max-width:none;margin:22px 0 4px;font-size:16px;line-height:1.7;color:#2f3742}
+  .intro p{margin-bottom:14px}
+  .intro p:last-child{margin-bottom:0;font-weight:600;color:var(--ink)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 8px}
+  .filter{border:1px solid var(--line);background:#fff;color:var(--muted);padding:6px 14px;border-radius:999px;font-size:13px;cursor:pointer;font-weight:500;transition:all .15s ease;font-family:inherit}
+  .filter:hover{border-color:var(--brand);color:var(--brand)}
+  .filter.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .filter .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  /* timeline */
+  .timeline{position:relative;margin-top:40px}
+  .timeline::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--line);transform:translateX(-50%)}
+
+  .row{position:relative;width:50%;padding:0 40px 44px;}
+  .row.left{padding-right:18px}
+  .row.right{padding-left:18px}
+  .row.left{left:0;text-align:right}
+  .row.right{left:50%;text-align:left}
+  .node{position:absolute;top:8px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--muted);z-index:2}
+  .row.left .node{right:-9px}
+  .row.right .node{left:-9px}
+  .year-tag{position:absolute;top:4px;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+  .row.left .year-tag{right:44px;padding-right:24px}
+  .row.right .year-tag{left:44px;padding-left:24px}
+
+  .card{display:block;width:100%;text-align:left;background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;border-left:4px solid var(--muted);margin-top:34px}
+  .card-body{padding:18px 20px}
+  .badge{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:3px 9px;border-radius:5px;color:#fff;margin-bottom:10px}
+  .date{font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.02em}
+  .card h3{font-size:19px;line-height:1.25;margin-bottom:8px;font-weight:700}
+  .card p{font-size:15px;color:#333;margin-bottom:10px}
+  .result{font-size:14px;background:var(--surface);border-radius:8px;padding:10px 12px;color:#2a2a2a;border-left:3px solid var(--brand)}
+  .result strong{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px;font-weight:700}
+  .meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  .meta-row a{color:var(--brand);text-decoration:none;border-bottom:1px solid transparent;font-weight:600}
+  .meta-row a:hover{border-bottom-color:currentColor}
+  .card img{width:100%;height:auto;display:block;background:#eee}
+
+  footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+
+  @media (max-width:900px){
+    .era-portrait{width:100vw;background-position:72% 22%}
+    .era-portrait::after{background:linear-gradient(to bottom,#ffffff 0%,rgba(255,255,255,.55) 100%)}
+    .era-portrait.visible{opacity:.32}
+    #era-caption{top:auto;bottom:14px;right:14px}
+    .timeline::before{left:8px;transform:none}
+    .row{width:100%;left:0 !important;text-align:left;padding:0 0 40px 34px}
+    .row.left,.row.right{padding:0 0 40px 34px}
+    .row.left .node,.row.right .node{left:1px;right:auto}
+    .row.left .year-tag,.row.right .year-tag{position:static;left:auto;right:auto;display:block;text-align:left;font-size:20px;margin:0 0 8px 0;padding:0 !important}
+    .card{margin-top:0}
+    .row.left .card::after,.row.right .card::after{display:none}
+  }
+
+  .card{position:relative}
+  .row.left .card::after,.row.right .card::after{content:"";position:absolute;top:14px;width:16px;height:2px;background:var(--line)}
+  .row.left .card::after{right:-18px}
+  .row.right .card::after{left:-18px}
+  .card.postponed{border-left-style:dashed;background:#fbfcfe;box-shadow:0 1px 2px rgba(20,30,50,.05)}
+  .card.postponed h3{color:var(--muted)}
+  .card.postponed .badge{background:var(--c-postponed) !important;color:#fff}
+  .row.postponed .node{border-style:dashed;background:#fbfcfe}
+  .row.postponed .year-tag{color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.era-portrait,#era-caption,#era-bg{transition:none}}
+
+  /* share bar */
+  #share-bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line);}
+  .share-inner{max-width:1040px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .share-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-right:2px}
+  .share-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:all .15s ease;text-decoration:none}
+  .share-btn:hover{border-color:var(--brand);color:var(--brand);transform:translateY(-1px)}
+  .share-btn svg{width:17px;height:17px;fill:currentColor}
+  .share-copied{font-size:12px;color:var(--c-local);font-weight:600;opacity:0;transition:opacity .3s;margin-left:4px}
+  .share-copied.show{opacity:1}
+  @media (max-width:720px){.share-label{display:none}}
+  :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="share-bar">
+  <div class="share-inner">
+    <span class="share-label">Поділитися</span>
+    <a class="share-btn" id="sh-fb" target="_blank" rel="noopener" aria-label="Поділитися у Facebook" title="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.25-1.5 1.55-1.5H17V4.6c-.29-.04-1.3-.13-2.46-.13-2.43 0-4.1 1.48-4.1 4.21v2.35H7.7V14h2.74v8h3.06z"/></svg>
+    </a>
+    <a class="share-btn" id="sh-li" target="_blank" rel="noopener" aria-label="Поділитися у LinkedIn" title="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M6.94 5a1.94 1.94 0 11-3.88 0 1.94 1.94 0 013.88 0zM3.3 8.48h3.3V22H3.3V8.48zM9.3 8.48h3.16v1.84h.05c.44-.83 1.52-1.71 3.12-1.71 3.34 0 3.96 2.2 3.96 5.06V22h-3.3v-5.98c0-1.43-.03-3.26-1.99-3.26-1.99 0-2.29 1.55-2.29 3.16V22H9.3V8.48z"/></svg>
+    </a>
+    <a class="share-btn" id="sh-x" target="_blank" rel="noopener" aria-label="Поділитися в X" title="X (Twitter)">
+      <svg viewBox="0 0 24 24"><path d="M17.53 3H20l-5.6 6.4L21 21h-5.16l-4.04-5.28L7.17 21H4.7l6-6.85L3 3h5.29l3.65 4.83L17.53 3zm-.9 16.2h1.37L7.44 4.72H5.97L16.63 19.2z"/></svg>
+    </a>
+    <button class="share-btn" id="sh-copy" aria-label="Копіювати посилання" title="Копіювати посилання">
+      <svg viewBox="0 0 24 24"><path d="M9.5 13.5a3.5 3.5 0 005 0l3-3a3.54 3.54 0 00-5-5l-1.3 1.3 1.42 1.42L14 6.9a1.54 1.54 0 012.17 2.17l-3 3a1.54 1.54 0 01-2.18 0 1 1 0 00-1.42 1.42zm5-3a3.5 3.5 0 00-5 0l-3 3a3.54 3.54 0 005 5l1.3-1.3-1.42-1.42L10 17.1a1.54 1.54 0 01-2.17-2.17l3-3a1.54 1.54 0 012.18 0 1 1 0 001.42-1.42z"/></svg>
+    </button>
+    <span class="share-copied" id="sh-copied">Скопійовано</span>
+  </div>
+</div>
+<div id="era-bg"></div>
+<div class="era-portrait" id="era-portrait"></div>
+<div id="era-caption">
+  <div class="lbl">Президентство</div>
+  <div class="name" id="era-name"></div>
+  <div class="yrs" id="era-yrs"></div>
+</div>
+
+<div class="wrap">
+  <img class="brand-logo" src="assets/logo.png" alt="КИЇВ.ВЛАДА">
+  <header>
+    <div class="eyebrow" id="src">OPORA</div>
+    <h1 id="title">Вибори в Україні</h1>
+    <p class="subtitle" id="subtitle"></p>
+    <div class="intro" id="intro"></div>
+    <div class="filters" id="filters"></div>
+  </header>
+
+  <div class="timeline" id="timeline"></div>
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const TYPE_LABELS = {
+  presidential:{label:"Президентські",color:"var(--c-presidential)"},
+  parliamentary:{label:"Парламентські",color:"var(--c-parliamentary)"},
+  local:{label:"Місцеві",color:"var(--c-local)"},
+  referendum:{label:"Референдум",color:"var(--c-referendum)"},
+  postponed:{label:"Не відбулися",color:"var(--c-postponed)"}
+};
+const MONTHS=["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+let ALL=[], ERAS=[], activeFilter="all", io=null;
+
+function fmtDate(iso){const d=new Date(iso);if(isNaN(d))return"";return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;}
+function eraFor(iso){const t=new Date(iso).getTime();return ERAS.find(e=>t>=new Date(e.start).getTime()&&t<new Date(e.end).getTime())||null;}
+
+function render(){
+  const tl=document.getElementById("timeline");
+  tl.innerHTML="";
+  const items=ALL.filter(e=>activeFilter==="all"||(e.types||[e.type]).includes(activeFilter))
+                 .sort((a,b)=>new Date(a.date)-new Date(b.date));
+  items.forEach((e,i)=>{
+    const types=e.types||[e.type];
+    const primary=TYPE_LABELS[types[0]]||{label:types[0],color:"var(--muted)"};
+    const isPost=types.includes("postponed");
+    const era=eraFor(e.date);
+    const side=i%2===0?"left":"right";
+    const row=document.createElement("div");
+    row.className="row "+side+(isPost?" postponed":"");
+    if(era&&!isPost)row.dataset.era=era.id;
+    row.innerHTML=`
+      <span class="year-tag">${e.year||""}</span>
+      <span class="node" style="border-color:${primary.color}"></span>
+      <article class="card${isPost?' postponed':''}" style="border-left-color:${primary.color}">
+        ${e.image?`<img src="${e.image}" alt="${e.image_alt||e.title}" loading="lazy">`:""}
+        <div class="card-body">
+          ${types.map(ty=>{const tt=TYPE_LABELS[ty]||{label:ty,color:"var(--muted)"};return `<span class="badge" style="background:${tt.color}">${tt.label}</span>`;}).join(" ")}
+          ${e.date?`<div class="date">${fmtDate(e.date)}</div>`:""}
+          <h3>${e.title}</h3>
+          ${e.summary?`<p>${e.summary}</p>`:""}
+          ${e.result?`<div class="result"><strong>Результат</strong>${e.result}</div>`:""}
+          <div class="meta-row">
+            ${e.source_url?`<a href="${e.source_url}" target="_blank" rel="noopener">Джерело →</a>`:""}
+          </div>
+        </div>
+      </article>`;
+    tl.appendChild(row);
+  });
+  setupObserver();
+  reportHeight();
+}
+
+function setActiveEra(id){
+  const era=ERAS.find(e=>e.id===id);
+  const bg=document.getElementById("era-bg");
+  const pr=document.getElementById("era-portrait");
+  const cap=document.getElementById("era-caption");
+  if(!era){pr.classList.remove("visible");cap.classList.remove("visible");bg.style.backgroundColor="var(--paper)";return;}
+  bg.style.backgroundColor=era.tint||"var(--paper)";
+  if(era.portrait){pr.style.backgroundImage=`url('${era.portrait}')`;if(era.focus)pr.style.backgroundPosition=era.focus;pr.classList.add("visible");}
+  else{pr.classList.remove("visible");}
+  document.getElementById("era-name").textContent=era.president||"";
+  document.getElementById("era-yrs").textContent=era.years||"";
+  cap.classList.add("visible");
+}
+
+function setupObserver(){
+  if(io)io.disconnect();
+  io=new IntersectionObserver((entries)=>{
+    const vis=entries.filter(en=>en.isIntersecting)
+                     .sort((a,b)=>b.intersectionRatio-a.intersectionRatio);
+    if(vis.length&&vis[0].target.dataset.era){setActiveEra(vis[0].target.dataset.era);}
+  },{rootMargin:"-40% 0px -40% 0px",threshold:[0,.25,.5,.75,1]});
+  document.querySelectorAll(".row[data-era]").forEach(r=>io.observe(r));
+}
+
+function buildFilters(){
+  const box=document.getElementById("filters");
+  const order=["presidential","parliamentary","local","referendum","postponed"];
+  const present=new Set();ALL.forEach(e=>(e.types||[e.type]).forEach(t=>present.add(t)));
+  const types=order.filter(t=>present.has(t));
+  const mk=(key,label,color)=>{
+    const b=document.createElement("button");
+    b.className="filter"+(key===activeFilter?" active":"");
+    b.innerHTML=(color?`<span class="dot" style="background:${color}"></span>`:"")+label;
+    b.onclick=()=>{activeFilter=key;buildFilters();render();};
+    return b;
+  };
+  box.innerHTML="";
+  box.appendChild(mk("all","Усі",null));
+  types.forEach(ty=>{const t=TYPE_LABELS[ty]||{label:ty,color:"var(--muted)"};box.appendChild(mk(ty,t.label,t.color));});
+}
+
+function reportHeight(){
+  const h=document.documentElement.scrollHeight;
+  if(window.parent!==window)window.parent.postMessage({type:"electionTimelineHeight",height:h},"*");
+}
+window.addEventListener("resize",reportHeight);
+
+// share buttons
+(function(){
+  const url=encodeURIComponent(location.href);
+  const text=encodeURIComponent(document.title || "Вибори в Україні — хронологія");
+  const fb=document.getElementById("sh-fb");
+  const li=document.getElementById("sh-li");
+  const x=document.getElementById("sh-x");
+  if(fb)fb.href="https://www.facebook.com/sharer/sharer.php?u="+url;
+  if(li)li.href="https://www.linkedin.com/sharing/share-offsite/?url="+url;
+  if(x)x.href="https://twitter.com/intent/tweet?url="+url+"&text="+text;
+  const copyBtn=document.getElementById("sh-copy");
+  const copied=document.getElementById("sh-copied");
+  if(copyBtn)copyBtn.onclick=async()=>{
+    try{await navigator.clipboard.writeText(location.href);}
+    catch(e){const t=document.createElement("input");t.value=location.href;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();}
+    if(copied){copied.classList.add("show");setTimeout(()=>copied.classList.remove("show"),1800);}
+  };
+})();
+
+
+fetch("data.json").then(r=>r.json()).then(data=>{
+  ALL=data.events||[];
+  ERAS=data.eras||[];
+  if(data.meta){
+    document.getElementById("title").textContent=data.meta.title||"Вибори в Україні";
+    document.getElementById("subtitle").textContent=data.meta.subtitle||"";
+    document.getElementById("src").textContent=data.meta.source||"OPORA";
+    document.getElementById("footer").innerHTML=(data.meta.source||"")+"<br>Костянтин Донченко";
+    if(data.meta.intro){const paras=Array.isArray(data.meta.intro)?data.meta.intro:String(data.meta.intro).split(/\n\n+/);document.getElementById("intro").innerHTML=paras.map(p=>`<p>${p}</p>`).join("");}
+  }
+  buildFilters();
+  render();
+}).catch(err=>{
+  document.getElementById("timeline").innerHTML="<p style='color:var(--muted)'>Не вдалося завантажити дані (data.json). Перевірте, що файл поруч із index.html.</p>";
+  console.error(err);
+});
+</script>
+</body>
+</html>
