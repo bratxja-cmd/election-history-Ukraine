@@ -136,6 +136,9 @@
   .share-btn svg{width:17px;height:17px;fill:currentColor}
   .share-copied{font-size:12px;color:var(--c-local);font-weight:600;opacity:0;transition:opacity .3s;margin-left:4px}
   .share-copied.show{opacity:1}
+  .share-full{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12px;font-weight:600;color:var(--brand);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:#fff;transition:all .15s ease;white-space:nowrap}
+  .share-full:hover{border-color:var(--brand);background:var(--brand);color:#fff}
+  @media (max-width:520px){.share-full span{display:none}}
   @media (max-width:720px){.share-label{display:none}}
   :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 </style>
@@ -156,6 +159,10 @@
     <button class="share-btn" id="sh-copy" aria-label="Копіювати посилання" title="Копіювати посилання">
       <svg viewBox="0 0 24 24"><path d="M9.5 13.5a3.5 3.5 0 005 0l3-3a3.54 3.54 0 00-5-5l-1.3 1.3 1.42 1.42L14 6.9a1.54 1.54 0 012.17 2.17l-3 3a1.54 1.54 0 01-2.18 0 1 1 0 00-1.42 1.42zm5-3a3.5 3.5 0 00-5 0l-3 3a3.54 3.54 0 005 5l1.3-1.3-1.42-1.42L10 17.1a1.54 1.54 0 01-2.17-2.17l3-3a1.54 1.54 0 012.18 0 1 1 0 001.42-1.42z"/></svg>
     </button>
+    <a class="share-full" id="sh-full" target="_blank" rel="noopener" href="https://bratxja-cmd.github.io/election-history-Ukraine/" title="Відкрити на весь екран">
+      <span>На весь екран</span>
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M14 3h7v7h-2V6.4l-8.3 8.3-1.4-1.4L17.6 5H14V3zM5 5h5v2H6.4l4.3 4.3-1.4 1.4L5 8.4V12H3V5h2z"/></svg>
+    </a>
     <span class="share-copied" id="sh-copied">Скопійовано</span>
   </div>
 </div>
